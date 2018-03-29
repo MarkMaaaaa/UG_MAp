@@ -1,0 +1,98 @@
+
+clc;
+clear;
+%%
+%%������
+file_path =  'D:\MarkUG\image\';% ͼ���ļ���·��  
+img_path_list = dir(strcat(file_path,'*.png'));%��ȡ���ļ���������ͼ��  
+img_num = length(img_path_list);%��ȡͼ��������  
+
+
+new_x=[];
+new_y=[];
+new_x1=[];
+new_y1=[];
+lb=[];
+rb=[];
+tb=[];
+fb=[];
+jindu_all=[];
+weidu_all=[];
+jinduzhi_min=[-325 -324 -330 -330 -320 -285 -290 -270 -250 -230 -220 -200 -190 -300 -340 -340 ];
+
+jinduzhi_max=[-322 -314 -290 -290 -280 -255 -250 -230 -210 -200 -180 -160 -160 -200 -310 -320 ];
+
+weiduzhi_min=[042 040 040 050 040 040 040 050 040 040 040 050 055 020 015 000 ];
+
+weiduzhi_max=[052 048 090 090 090 090 090 090 090 080 080 080 085 080 045 050 ];
+
+
+
+%%
+
+
+if img_num > 0 %������������ͼ��  
+         j1 = 2%��һ��ȡͼ��  
+            image_name = img_path_list(j1).name;% ͼ����  
+            [im,map] = imread(strcat(file_path,image_name));  
+            fprintf('%d %s\n',j1,strcat(file_path,image_name));% ��ʾ���ڴ�����ͼ����  
+            %ͼ����������
+            %[raw_band,map]=imread('D:\MarkUG\image\im_00000_band_50.png');
+            [raw_band_rgb,~]=ind2rgb(im,map);
+            raw_band_rgb=im2uint8(raw_band_rgb);%ת��Ϊ0-255����
+            %image(raw_band_rgb)
+
+            
+            for ix=1:821
+                for iy=1:1599
+                    if raw_band_rgb(ix,iy,1)<=50&&raw_band_rgb(ix,iy,1)~=0
+                     new_x=[new_x,ix];
+                      new_y=[new_y,iy];
+                      break;
+                    else
+                     continue;
+                    end
+                end
+            end
+            for ix1=1:821
+             for iy1=1599:-1:1
+                     if raw_band_rgb(ix1,iy1,1)<=50&&raw_band_rgb(ix1,iy1,1)~=0
+                        new_x1=[new_x1,ix1];
+                	     new_y1=[new_y1,iy1];
+                        break;
+                     else
+                     continue;
+                     end  
+             end
+            end
+            leftbound=min(new_y);
+            rightbound=max(new_y1);
+            topbound=min(new_x);
+            floorbound=max(new_x);
+            
+            lb=[lb,leftbound];
+            rb=[rb,rightbound];
+            tb=[tb,topbound];
+            fb=[fb,floorbound];
+        %new_raw_band=raw_band_rgb(new_x(1):new_x(end),leftbound:rightbound);
+        %new_raw_band=ind2rgb(new_raw_band,map_rgb);
+        %new_raw_band=ind2rgb(new_raw_band);
+        %image(new_raw_band);
+            [jindu_ex,weidu_ex]=UG03(im);
+            jindu_all=[jindu_all,jindu_ex];
+            weidu_all=[weidu_all,weidu_ex];
+            
+        
+        
+        end
+
+%%
+
+
+
+
+
+
+
+
+
